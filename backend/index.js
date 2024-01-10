@@ -12,7 +12,13 @@ mongoose.connect(mongoURL).then(()=>{
 }).catch((error)=>{console.log(`${error} : Connection Unsuccessful!`)}); 
 
 app.use(express.json());
-app.use(cors());
+app.use(
+    cors({
+      origin: `http://172.16.0.2:3000`,
+      credentials: true
+    })
+);
+
 
 app.use('/api/auth', require('./routes/auth'));
 

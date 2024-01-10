@@ -6,7 +6,7 @@ export const AuthContext = createContext();
 
 export const AuthContextProvider = ({children}) =>{
 
-    const [user, setUser] = useState(JSON.parse(localStorage.getItem("user")));
+    const [user, setUser] = useState(JSON.parse(localStorage.getItem("user")) || null);
 
     const loginUser = async (inputs) => {
         const res = await axios.post("http://127.0.0.1:5000/api/auth/login", inputs, {withCredentials: true,});
@@ -20,6 +20,7 @@ export const AuthContextProvider = ({children}) =>{
     const logoutUser = async () => {
         const res = await axios.post("http://127.0.0.1:5000/api/auth/logout", {withCredentials: true,});
         console.log(res)
+        setUser(null)
         return res.data;
     };
     const getUser = async (inputs) => {

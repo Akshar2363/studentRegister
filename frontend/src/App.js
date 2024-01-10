@@ -1,13 +1,17 @@
 import './App.scss';
-import {RouterProvider, createBrowserRouter, Outlet} from "react-router-dom";
+import {RouterProvider, createBrowserRouter, Outlet, Navigate} from "react-router-dom";
 import { Home } from './pages/Home'
 import { Navbar } from './components/Navbar'
 import { Footer } from './components/Footer';
 import { Login } from './pages/Login';
 import { Signup } from './pages/Signup';
+import { Dashboard } from './pages/Dashboard';
+import { useContext } from 'react';
+import { AuthContext } from './context/authContext';
 
 function App() {
 
+    const {user} = useContext(AuthContext)
     const Layout = () => {
         return (
             <>
@@ -21,12 +25,22 @@ function App() {
             </>
         );
     };
+    const ProtectedRoute = ({ children }) => {
+        if (!user) {
+            alert('Please Login First!')
+          return <Navigate to="/login" />;
+        }
+        return children;
+      };
+
 
     const router = createBrowserRouter([
         {
             path: "/",
             element: (
-                <Layout/>),
+
+                    <Layout/>
+            ),
             children: [
                 {
                     path: "/",
@@ -39,6 +53,10 @@ function App() {
                 {
                     path: "/signup",
                     element: <Signup/>
+                },
+                {
+                    path: "/dashboard",
+                element: <ProtectedRoute><Dashboard/></ProtectedRoute>
                 },
             ]
         },

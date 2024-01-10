@@ -32,10 +32,10 @@ router.post('/signup', [
     const errors = validationResult(req);
     if (! errors.isEmpty()) {
         return res.status(400).json({
-            success, error: errors.array()[0].message
+            success, error: errors.array()[0].msg
         });
     }
-
+    
     try { // Check if user with given email already exists
         let user = await Student.findOne({email: req.body.email});
         if (user) {
@@ -66,10 +66,7 @@ router.post('/signup', [
 
         const authToken = jwt.sign(payload, JWT_SECRET);
         success = true;
-        const {
-            password,
-            ...others
-        } = user;
+        const { password, ...others } = user;
 
         res.cookie("authToken", authToken, {httpOnly: true}).status(200).json({success, authToken, others});
 
@@ -115,7 +112,7 @@ router.post('/login', [
         const {
             password,
             ...others
-        } = user;
+        } = user._doc;
 
         res.cookie("authToken", authToken, {httpOnly: true}).status(200).json({success, authToken, others});
 

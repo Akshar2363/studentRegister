@@ -1,24 +1,31 @@
-import React, { useState } from 'react'
-import { Link } from 'react-router-dom'
+import React, { useContext, useState } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
+import { AuthContext } from '../context/authContext'
 
 export const Login = () => {
     
     const [credentials, setCredentials] = useState({roll:"", password:""})
-
-    const handleSubmit = () =>{
-        console.log('submitted')
+    const {loginUser} = useContext(AuthContext)
+    const navigate = useNavigate()
+    const handleSubmit = async (e) =>{
+        e.preventDefault()
+        try{
+            await loginUser(credentials);
+            alert('Login Successful!')
+            navigate('/dashboard')
+        }catch(err){
+            alert(err.response.data.error)
+        }
+            
     }
 
 
     const onchange = (e) =>{
         e.preventDefault()
         setCredentials({...credentials, [e.target.name] : e.target.value})
-        console.log(credentials)
     }
 
     return (
-
-
         <div className="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">
             <div className="sm:mx-auto sm:w-full sm:max-w-sm">
                 <img className="mx-auto h-10 w-auto" src="https://tailwindui.com/img/logos/mark.svg?color=teal&shade=600" alt="Your Company" />
@@ -27,7 +34,7 @@ export const Login = () => {
 
             <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
 
-                <form id="studentForm" className="space-y-6" action="/login/student" method="POST">
+                <form id="studentForm" className="space-y-6">
                     <div>
                         <label htmlFor="roll" className="block text-sm font-medium leading-6 text-gray-900">Roll Number</label>
                         <div className="mt-2">
